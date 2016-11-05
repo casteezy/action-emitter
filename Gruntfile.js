@@ -1,8 +1,9 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     "use strict";
 
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.initConfig({
 
@@ -15,17 +16,53 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    // 'app/lib/font-awesome/font-awesome.css': 'node_modules/bootstrap-sass',
-                    // 'app/lib/font-awesome/font-awesome.css': 'node_modules/font-awesome/font-awesome.scss',
-                    'app/dist/app.css': 'app/index.scss',
+                    'src/app/dist/app.css': 'src/app/app.scss',
                 }
             }
+        },
+
+        /**
+         * Copy files/folders into other directories
+         */
+        copy: {
+            main: {
+                files: [{
+                    cwd: 'node_modules/font-awesome/',
+                    src: ['css/*', 'fonts/*'],
+                    expand: true,
+                    dest: 'src/app/lib/font-awesome/',
+                    filter: 'isFile'
+                }, {
+                    cwd: 'node_modules/bootstrap/dist',
+                    src: ['css/*.min.*', 'fonts/*', 'js/*.min.*'],
+                    expand: true,
+                    dest: 'src/app/lib/bootstrap/',
+                    filter: 'isFile'
+                }, {
+                    cwd: 'node_modules/jquery/dist/',
+                    src: ['jquery.min.js', 'jquery.min.map'],
+                    expand: true,
+                    dest: 'src/app/lib/jquery/',
+                    filter: 'isFile'
+                }, {
+                    cwd: 'node_modules/',
+                    src: [
+                        'angular/*.min.js',
+                        'angular/*.min.js.map',
+                        'angular-route/*.min.*',
+                        'angular-sanitize/*.min.*'
+                    ],
+                    expand: true,
+                    dest: 'src/app/lib/',
+                    filter: 'isFile'
+                }],
+            },
         },
 
         watch: {
             scripts: {
                 files: [
-                    'app/index.scss',
+                    'src/app/app.scss',
                 ],
                 tasks: ['sass'],
                 options: {
@@ -36,10 +73,9 @@ module.exports = function (grunt) {
         }
     });
 
+    // Copy npm package files into dist/ folder and compile sass
+    grunt.registerTask('build', ['copy', 'sass']);
 
-    /**
-     * Registers/starts a watch for running the SVO app.
-     */
-    grunt.registerTask('build', ['sass']);
-    grunt.registerTask('default', ['build', 'watch']);
+    // Compile sass and watch for sass changes
+    grunt.registerTask('default', ['sass', 'watch']);
 }
