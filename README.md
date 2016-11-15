@@ -15,12 +15,14 @@ Includes:
  - Sass
  - jQuery
  - Font Awesome
+ - Typescript
 
 # TODOs
 - [x] `grunt` working
-- [x] Hook up `grunt` tasks with `npm start`
-- [ ] Hook up current grunt `build` task to watch for all *.scss files
+- [ ] Hook up `grunt` tasks with `npm start`
+- [ ] Hook up grunt `default` task to watch for all *.scss files
+- [ ] Hook up grunt `default` task to watch for all *.ts files
 - [x] Get `grunt-contrib-copy` working with bootstrap and font-awesome packages
 - [ ] Support for `bootstrap-ui`
 - [x] Organize file structure
-- [ ] Typescript support (transpiler + grunt tasks)
+- [x] Typescript support (transpiler + grunt tasks)
