@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-ts');
 
     grunt.initConfig({
 
@@ -16,7 +17,7 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'src/app/dist/app.css': 'src/app/app.scss',
+                    'src/app/dist/css/app.css': 'src/app/app.scss',
                 }
             }
         },
@@ -59,6 +60,20 @@ module.exports = function(grunt) {
             },
         },
 
+        /**
+         * Compile all TS files. Wraps the `tsc` command-line compiler
+         */
+        ts: {
+            default: {
+                options: {
+                    additionalFlags: '--pretty'
+                },
+                src: ["src/app/**/*.ts", "!node_modules/**"],
+                dest: 'src/app/dist/js'
+            }
+        },
+
+
         watch: {
             scripts: {
                 files: [
@@ -74,8 +89,8 @@ module.exports = function(grunt) {
     });
 
     // Copy npm package files into dist/ folder and compile sass
-    grunt.registerTask('build', ['copy', 'sass']);
+    grunt.registerTask('build', ['copy', 'sass', 'ts']);
 
     // Compile sass and watch for sass changes
-    grunt.registerTask('default', ['sass', 'watch']);
-}
+    grunt.registerTask('default', ['sass', 'ts', 'watch']);
+};
