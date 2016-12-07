@@ -16,6 +16,23 @@
         }
     });
 
+    class ConsumerComponent {
+        public event;
+        private data;
+
+        static $inject = ['ActionEmitterService'];
+        constructor(private ActionEmitterService) {
+        }
+
+        $onInit() {
+            if (!this.event) throw 'Event required for consumer component';
+            this.ActionEmitterService.subscribe(this.event, this.handleAction.bind(this));
+        }
+
+        private handleAction(data) {
+            this.data = data;
+        }
+    }
     appModule.component('consumer', {
         bindings: {
             event: '@'
@@ -26,23 +43,7 @@
             '<pre>{{$ctrl.data | json}}</pre>',
             '</div>',
         ].join(''),
-        controller: class ConsumerComponent {
-            public event;
-            private data;
-
-            static $inject = ['ActionEmitterService'];
-            constructor(private ActionEmitterService) {
-            }
-
-            $onInit() {
-                if (!this.event) throw 'Event required for consumer component';
-                this.ActionEmitterService.subscribe(this.event, this.handleAction.bind(this));
-            }
-
-            private handleAction(data) {
-                this.data = data;
-            }
-        }
+        controller: ConsumerComponent,
     });
 
 
@@ -76,6 +77,20 @@
             }
 
         }
+    });
+
+    appModule.component('parentConsumer', {
+        bindings: {
+            event: '@'
+        },
+        template: [
+            '<div class="parent-consumer bordered green">',
+            '<p>Inside <code>parent-consumer</code> component: </p>',
+            '<pre>{{$ctrl.data | json}}</pre>',
+            '<consumer-data-source event="{{$ctrl.event}}"></consumer-data-source>',
+            '</div>'
+        ].join(''),
+        controller: ConsumerComponent
     });
 
 })((<any>window).angular);

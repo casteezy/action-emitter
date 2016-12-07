@@ -3,6 +3,7 @@
     <p>Simple, separate angular service to track data changes in cases where older apps don't have access to
         EventEmitter, redux, etc.</p>
 
+    <h2>Sibling component</h2>
     <p>Event: <code>{{pc.event}}</code></p>
 
     <div class="row">
@@ -15,5 +16,6 @@
         </div>
     </div>
 
-
+    <h2>Child to parent</h2>
+    <parent-consumer event="someOtherEvent"></parent-consumer>
 </div>
