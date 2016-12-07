@@ -24,7 +24,6 @@
         }
 
         public subscribe(callback: Function) {
-            debugLog('emitter.subscribe');
             callback && this.listeners.push(callback);
         }
     }
