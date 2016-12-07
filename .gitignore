@@ -85,8 +85,8 @@ fabric.properties
 .tscache/
 
 # App
-src/app/dist/*
-src/app/lib/*
+src/app/dist/**/*
+src/app/lib/**/*
 src/app/**/*.baseDir*
 src/app/**/*.js
 src/app/**/*.css
