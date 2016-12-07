@@ -1,7 +1,12 @@
 
 <div class="playground-container" ng-controller="PlaygroundCtrl as pc">
-    <p>For testing angular things.
-        <button ng-click="pc.btn()">Click</button>
-        {{pc.count}}
-    </p>
+    <p>For testing angular things.</p>
+
+    <h2>Action Emitter</h2>
+    <p>Simple, separate angular service to track data changes in cases where older apps don't have access to EventEmitter, redux, etc.</p>
+    <p>WIP, for directives only works for child source => parent consumer</p>
+
+    <source-component></source-component>
+    <source-component-2></source-component-2>
+
 </div>

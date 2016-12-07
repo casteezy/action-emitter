@@ -1,2 +1,18 @@
+.parent, .child {
+  border-width: 1px;
+  border-style: dashed;
+  padding: 5px; }
+
+.red {
+  color: darkred;
+  border-color: red; }
+
+.green {
+  color: darkgreen;
+  border-color: green; }
+
+.blue {
+  color: blue;
+  border-color: blue; }
 
 /*# sourceMappingURL=app.css.map */
