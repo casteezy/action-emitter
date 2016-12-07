@@ -7,46 +7,75 @@
     const CLICKED_EVENT = 'objectClickedEvent';
 
     const appModule = angular.module('app', ['actionEmitter']);
-    appModule.controller('PlaygroundCtrl', [function () {
 
-    }]);
+    appModule.controller('PlaygroundCtrl', class PlaygroundCtrl {
+        public event;
 
-    appModule.directive('sourceComponent', function (ActionEmitterService) {
-        return {
-            restrict: 'EA',
-            scope: {},
-            template: [
-                '<div class="child"><p class="green">Inside source component: ',
-                '<pre>{{ctrl.data}}</pre>',
-                '</p></div>',
-            ].join(''),
-            controllerAs: 'ctrl',
-            controller: function () {
-                const self = this;
-                ActionEmitterService.subscribe(CLICKED_EVENT, function (data) {
-                    self.data = data;
-                });
+        constructor() {
+            this.event = CLICKED_EVENT;
+        }
+    });
+
+    appModule.component('consumer', {
+        bindings: {
+            event: '@'
+        },
+        template: [
+            '<div class="consumer bordered green">',
+            '<p>Inside <code>consumer</code> component:</p>',
+            '<pre>{{$ctrl.data | json}}</pre>',
+            '</div>',
+        ].join(''),
+        controller: class ConsumerComponent {
+            public event;
+            private data;
+
+            static $inject = ['ActionEmitterService'];
+            constructor(private ActionEmitterService) {
+            }
+
+            $onInit() {
+                if (!this.event) throw 'Event required for consumer component';
+                this.ActionEmitterService.subscribe(this.event, this.handleAction.bind(this));
+            }
+
+            private handleAction(data) {
+                this.data = data;
             }
         }
     });
 
-    appModule.directive('sourceComponent2', function (ActionEmitterService) {
-        return {
-            restrict: 'EA',
-            scope: true,
-            template: [
-                '<div class="child"><p class="blue">Inside source component 2: ',
-                '<button class="btn" ng-click="click()">Click Me</button></p></div>'
-            ].join(''),
-            link: (scope) => {
-                const emitter = ActionEmitterService.initialize(CLICKED_EVENT);
-                let counter = 0;
-                scope.click = function () {
-                    emitter.doAction('Clicked - ' + ++counter);
-                }
-            },
-        };
 
+    appModule.component('consumerDataSource', {
+        bindings: {
+            event: '@'
+        },
+        template: [
+            '<div class="data-source bordered blue">',
+            '<p>Inside <code>data-source</code> component: </p>',
+            '<button class="btn btn-default btn-sm" ng-click="$ctrl.click()">Click Me</button>',
+            '</div>'
+        ].join(''),
+        controller: class DataSourceComponent {
+            public event;
+            private count;
+            private emitter;
+
+            static $inject = ['ActionEmitterService'];
+            constructor(private ActionEmitterService) {
+                this.count = 0;
+            }
+
+            $onInit() {
+                if (!this.event) throw 'Event required for dataSource component';
+                this.emitter = this.ActionEmitterService.initialize(this.event);
+            }
+
+            click() {
+                this.emitter.doAction(`Clicked: ${++this.count}`);
+            }
+
+        }
     });
 
 })((<any>window).angular);
