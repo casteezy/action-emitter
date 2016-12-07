@@ -1,67 +1,88 @@
 (function (angular) {
-    const debugLog = true;
+    const debugMode = true;
+
+    function debugLog(...messages) {
+        debugMode && console.log(messages);
+    }
 
     const aeModule = angular.module('actionEmitter', []);
 
-    aeModule.factory('ActionEmitterService', [function () {
-        var emitters = [];
+    class ActionEmitter {
+        private listeners;
 
-        const newEmitter = (event) => {
-            var listeners = [];
-            return {
-                event,
-                doAction: (data) => {
-                    debugLog && console.log('emitter.doAction for', listeners.length, 'listeners with data:', data);
-                    listeners.forEach((listener) => listener(data));
-                },
-                getEvent: () => event,
-                subscribe: (callback) => {
-                    debugLog && console.log('emitter.subscribe');
-                    callback && listeners.push(callback);
-                }
-            };
+        constructor(private event) {
+            this.listeners = [];
+        }
+
+        private doAction(data: any) {
+            debugLog('emitter.doAction for', this.listeners.length, 'listeners with data:', data);
+            this.listeners.forEach((listener) => listener(data));
+        }
+
+        public getEvent(): string {
+            return this.event;
+        }
+
+        public subscribe(callback: Function) {
+            debugLog('emitter.subscribe');
+            callback && this.listeners.push(callback);
+        }
+    }
+
+    class ActionEmitterService {
+        private emitters: {
+            [event: string]: ActionEmitter;
+        };
+        private pendingSubscribers: {
+            [event: string]: Function[];
         };
 
-        let pendingSubscribers = {};
-        const initialize = (event) => {
-            const existingList = emitters.filter(e => e.getEvent() === event);
-            if (existingList.length) {
-                console.log('service.initialize-existing emitter found');
-                return existingList[0];
+        constructor() {
+            this.emitters = {};
+            this.pendingSubscribers = {};
+        }
+
+        public initialize(event: string): ActionEmitter {
+            if (this.emitters[event]) {
+                debugLog('service.initialize-existing emitter found', event);
+                return this.emitters[event];
             }
-            const emitter = newEmitter(event);
-            emitters.push(emitter);
-            console.log('service.initialize-new emitter created');
-            if (pendingSubscribers[event] && pendingSubscribers[event].length) {
+
+            debugLog('service.initialize-new emitter created', event);
+            this.emitters[event] = new ActionEmitter(event);
+            this.updatePendingSubscribers(event);
+
+            return this.emitters[event];
+        };
+
+        private updatePendingSubscribers(event:string) {
+            if (this.pendingSubscribers[event]) {
                 let debugCount = 0;
-                pendingSubscribers[event].forEach(callback => {
-                    debugLog && debugCount++;
-                    subscribe(event, callback);
+                this.pendingSubscribers[event].forEach(callback => {
+                    debugCount++;
+                    this.subscribe(event, callback);
                 });
-                pendingSubscribers[event] = [];
-                debugLog && console.log('service.initialize-pending subscriber(s) found', debugCount);
+                debugLog('service.initialize-pending subscriber(s) found', debugCount);
             }
-            return emitter;
+            delete this.pendingSubscribers[event];
+        }
+
+        public subscribe(event: string, callback: Function) {
+            const found = this.emitters[event];
+            if (found) {
+                debugLog('service.subscribe-emitter found', event);
+                found.subscribe(callback);
+            } else {
+                debugLog('service.subscribe-emitter not found, pending', event);
+                if (!this.pendingSubscribers[event]) {
+                    this.pendingSubscribers[event] = [];
+                }
+                this.pendingSubscribers[event].push(callback);
+            }
         };
 
-        const subscribe = (event, callback) => {
-            debugLog && console.log('service.subscribe to', event);
-            const found = emitters.filter(e => e.getEvent() === event);
-            if (found && found.length) {
-                found[0].subscribe(callback);
-                debugLog && console.log('service.subscribe, emitter found', event);
-            } else {
-                debugLog && console.log('emitter not found, pending', event);
-                if (!pendingSubscribers[event]) {
-                    pendingSubscribers[event] = [];
-                }
-                pendingSubscribers[event].push(callback);
-            }
-        };
-        return {
-            initialize,
-            subscribe,
-        };
-    }]);
+    }
+
+    aeModule.service('ActionEmitterService', ActionEmitterService);
 
 })((<any>window).angular);
