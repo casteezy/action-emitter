@@ -39,44 +39,43 @@
         },
         template: [
             '<div class="consumer bordered green">',
-            '<p>Inside <code>consumer</code> component:</p>',
+            '<p><code>consumer</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
             '<pre>{{$ctrl.data | json}}</pre>',
             '</div>',
         ].join(''),
         controller: ConsumerComponent,
     });
 
+    class DataSourceComponent {
+        public event;
+        private count;
+        private emitter;
 
+        static $inject = ['ActionEmitterService'];
+        constructor(private ActionEmitterService) {
+            this.count = 0;
+        }
+
+        $onInit() {
+            if (!this.event) throw 'Event required for dataSource component';
+            this.emitter = this.ActionEmitterService.initialize(this.event);
+        }
+
+        triggerAction() {
+            this.emitter.doAction(`Something happened! ${++this.count} - ${this.event}`);
+        }
+    }
     appModule.component('consumerDataSource', {
         bindings: {
             event: '@'
         },
         template: [
             '<div class="data-source bordered blue">',
-            '<p>Inside <code>data-source</code> component: </p>',
-            '<button class="btn btn-default btn-sm" ng-click="$ctrl.click()">Click Me</button>',
+            '<p><code>data-source</code> component, emitting to <code>{{::$ctrl.event}}</code></p>',
+            '<button class="btn btn-default btn-sm" ng-click="$ctrl.triggerAction()">Click Me</button>',
             '</div>'
         ].join(''),
-        controller: class DataSourceComponent {
-            public event;
-            private count;
-            private emitter;
-
-            static $inject = ['ActionEmitterService'];
-            constructor(private ActionEmitterService) {
-                this.count = 0;
-            }
-
-            $onInit() {
-                if (!this.event) throw 'Event required for dataSource component';
-                this.emitter = this.ActionEmitterService.initialize(this.event);
-            }
-
-            click() {
-                this.emitter.doAction(`Clicked: ${++this.count}`);
-            }
-
-        }
+        controller: DataSourceComponent
     });
 
     appModule.component('parentConsumer', {
@@ -85,12 +84,26 @@
         },
         template: [
             '<div class="parent-consumer bordered green">',
-            '<p>Inside <code>parent-consumer</code> component: </p>',
+            '<p><code>parent-consumer</code> component: </p>',
             '<pre>{{$ctrl.data | json}}</pre>',
             '<consumer-data-source event="{{$ctrl.event}}"></consumer-data-source>',
             '</div>'
         ].join(''),
         controller: ConsumerComponent
+    });
+
+    appModule.component('parentDataSource', {
+        bindings: {
+            event: '@'
+        },
+        template: [
+            '<div class="parent-data-source bordered blue">',
+            '<p><code>parent-data-source</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
+            '<button class="btn btn-default btn-sm" ng-click="$ctrl.triggerAction()">Click Me</button>',
+            '<consumer event="{{$ctrl.event}}"></consumer>',
+            '</div>'
+        ].join(''),
+        controller: DataSourceComponent
     });
 
 })((<any>window).angular);
