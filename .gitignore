@@ -82,3 +82,12 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 .idea/
+.tscache/
+
+# App
+src/app/dist/*
+src/app/lib/*
+src/app/**/*.baseDir*
+src/app/**/*.js
+src/app/**/*.css
+src/app/**/*.map
