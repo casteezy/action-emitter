@@ -3,21 +3,35 @@
     <p>Simple, separate angular service to track data changes in cases where older apps don't have access to
         EventEmitter, redux, etc.</p>
 
-    <h2>Sibling component</h2>
+    <h2>Sibling components</h2>
 
     <div class="row">
-        <div class="col-lg-6 col-sm-6">
+        <div class="col-lg-6">
             <consumer-data-source event="{{pc.event}}"></consumer-data-source>
         </div>
-        <div class="col-lg-6 col-sm-6">
+        <div class="col-lg-6">
             <consumer event="{{pc.event}}"></consumer>
             <consumer event="{{pc.event}}"></consumer>
+
+
+            <h3>Consumer initialized later</h3>
+            <button class="btn btn-default btn-sm"
+                    ng-click="pc.showTimedConsumer = !pc.showTimedConsumer">Add/Delete Consumer
+            </button>
+
+            <!-- ngIf to create/remove for initialization -->
+            <div ng-if="pc.showTimedConsumer">
+                <consumer event="{{pc.event}}"></consumer>
+            </div>
         </div>
     </div>
 
-    <h2>Child to parent</h2>
-    <parent-consumer event="someOtherEvent"></parent-consumer>
+</div>
 
-    <h2>Parent to child</h2>
-    <parent-data-source event="someOtherEvent2"></parent-data-source>
+<h2>Child to parent</h2>
+<parent-consumer event="someOtherEvent"></parent-consumer>
+
+<h2>Parent to child</h2>
+<parent-data-source event="someOtherEvent2"></parent-data-source>
+
 </div>

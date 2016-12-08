@@ -2,13 +2,14 @@
     const debugMode = true;
 
     function debugLog(...messages) {
-        debugMode && console.log(messages);
+        debugMode && console.log(messages.join(' '));
     }
 
     const aeModule = angular.module('actionEmitter', []);
 
     class ActionEmitter {
-        private listeners;
+        private listeners:Function[];
+        private data:any;
 
         constructor(private event) {
             this.listeners = [];
@@ -16,6 +17,7 @@
 
         public doAction(data: any) {
             debugLog('emitter.doAction for', this.listeners.length, 'listeners with data:', data);
+            this.data = data;
             this.listeners.forEach((listener) => listener(data));
         }
 
@@ -23,8 +25,11 @@
             return this.event;
         }
 
-        public subscribe(callback: Function) {
-            callback && this.listeners.push(callback);
+        public subscribe(listener: Function) {
+            if (listener) {
+                this.listeners.push(listener);
+                listener(this.data);
+            }
         }
     }
 
@@ -43,11 +48,11 @@
 
         public initialize(event: string): ActionEmitter {
             if (this.emitters[event]) {
-                debugLog('service.initialize-existing emitter found', event);
+                debugLog('service.initialize-existing emitter found,', event);
                 return this.emitters[event];
             }
 
-            debugLog('service.initialize-new emitter created', event);
+            debugLog('service.initialize-new emitter created,', event);
             this.emitters[event] = new ActionEmitter(event);
             this.updatePendingSubscribers(event);
 
@@ -61,7 +66,7 @@
                     debugCount++;
                     this.subscribe(event, callback);
                 });
-                debugLog('service.initialize-pending subscriber(s) found', debugCount);
+                debugLog('service.initialize-pending subscriber(s) found,', debugCount);
             }
             delete this.pendingSubscribers[event];
         }
@@ -69,10 +74,10 @@
         public subscribe(event: string, callback: Function) {
             const found = this.emitters[event];
             if (found) {
-                debugLog('service.subscribe-emitter found', event);
+                debugLog('service.subscribe-emitter found,', event);
                 found.subscribe(callback);
             } else {
-                debugLog('service.subscribe-emitter not found, pending', event);
+                debugLog('service.subscribe-emitter not found, pending,', event);
                 if (!this.pendingSubscribers[event]) {
                     this.pendingSubscribers[event] = [];
                 }
