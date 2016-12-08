@@ -4,7 +4,7 @@
 
 (function (angular) {
 
-    const DATE_FORMAT = 'h:mm:sss a';
+    const DATE_FORMAT = 'h:mm:ss.sss a';
 
     const appModule = angular.module('app', ['actionEmitter']);
 
