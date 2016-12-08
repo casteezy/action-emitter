@@ -4,7 +4,7 @@
 
 (function (angular) {
 
-    const CLICKED_EVENT = 'objectClickedEvent';
+    const DATE_FORMAT = 'h:mm:sss a';
 
     const appModule = angular.module('app', ['actionEmitter']);
 
@@ -12,16 +12,20 @@
         public event;
 
         constructor() {
-            this.event = CLICKED_EVENT;
+            this.event = 'objectClickedEvent';
         }
     });
 
     class ConsumerComponent {
+        public initializedTime;
+        public dateFormat;
         public event;
         private data;
 
         static $inject = ['ActionEmitterService'];
         constructor(private ActionEmitterService) {
+            this.initializedTime = Date.now();
+            this.dateFormat = DATE_FORMAT;
         }
 
         $onInit() {
@@ -33,20 +37,10 @@
             this.data = data;
         }
     }
-    appModule.component('consumer', {
-        bindings: {
-            event: '@'
-        },
-        template: [
-            '<div class="consumer bordered green">',
-            '<p><code>consumer</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
-            '<pre>{{$ctrl.data | json}}</pre>',
-            '</div>',
-        ].join(''),
-        controller: ConsumerComponent,
-    });
 
-    class DataSourceComponent {
+    class ProducerComponent {
+        public initializedTime;
+        public dateFormat;
         public event;
         private count;
         // private emitter;
@@ -54,6 +48,8 @@
         static $inject = ['ActionEmitterService'];
         constructor(private ActionEmitterService) {
             this.count = 0;
+            this.initializedTime = Date.now();
+            this.dateFormat = DATE_FORMAT;
         }
 
         $onInit() {
@@ -67,17 +63,33 @@
             // this.emitter.doAction(`Something happened! ${++this.count} - ${this.event}`);
         }
     }
-    appModule.component('consumerDataSource', {
+
+    appModule.component('consumer', {
         bindings: {
             event: '@'
         },
         template: [
-            '<div class="data-source bordered blue">',
-            '<p><code>data-source</code> component, emitting to <code>{{::$ctrl.event}}</code></p>',
+            '<div class="consumer bordered green">',
+            '<p><code>consumer</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
+            '<p>Initialized at {{::$ctrl.initializedTime | date:$ctrl.dateFormat }}</p>',
+            '<pre>{{$ctrl.data | json}}</pre>',
+            '</div>',
+        ].join(''),
+        controller: ConsumerComponent,
+    });
+
+    appModule.component('producer', {
+        bindings: {
+            event: '@'
+        },
+        template: [
+            '<div class="producer bordered blue">',
+            '<p><code>producer</code> component, emitting to <code>{{::$ctrl.event}}</code></p>',
+            '<p>Initialized at {{::$ctrl.initializedTime | date:$ctrl.dateFormat }}</p>',
             '<button class="btn btn-default btn-sm" ng-click="$ctrl.triggerAction()">Click Me</button>',
             '</div>'
         ].join(''),
-        controller: DataSourceComponent
+        controller: ProducerComponent
     });
 
     appModule.component('parentConsumer', {
@@ -87,25 +99,27 @@
         template: [
             '<div class="parent-consumer bordered green">',
             '<p><code>parent-consumer</code> component: </p>',
+            '<p>Initialized at {{::$ctrl.initializedTime | date:$ctrl.dateFormat }}</p>',
             '<pre>{{$ctrl.data | json}}</pre>',
-            '<consumer-data-source event="{{$ctrl.event}}"></consumer-data-source>',
+            '<producer event="{{$ctrl.event}}"></producer>',
             '</div>'
         ].join(''),
         controller: ConsumerComponent
     });
 
-    appModule.component('parentDataSource', {
+    appModule.component('parentProducer', {
         bindings: {
             event: '@'
         },
         template: [
-            '<div class="parent-data-source bordered blue">',
-            '<p><code>parent-data-source</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
+            '<div class="parent-producer bordered blue">',
+            '<p><code>parent-producer</code> component subscribed to <code>{{::$ctrl.event}}</code></p>',
+            '<p>Initialized at {{::$ctrl.initializedTime | date:$ctrl.dateFormat }}</p>',
             '<button class="btn btn-default btn-sm" ng-click="$ctrl.triggerAction()">Click Me</button>',
             '<consumer event="{{$ctrl.event}}"></consumer>',
             '</div>'
         ].join(''),
-        controller: DataSourceComponent
+        controller: ProducerComponent
     });
 
 })((<any>window).angular);
