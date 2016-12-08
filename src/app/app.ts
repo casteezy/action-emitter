@@ -49,7 +49,7 @@
     class DataSourceComponent {
         public event;
         private count;
-        private emitter;
+        // private emitter;
 
         static $inject = ['ActionEmitterService'];
         constructor(private ActionEmitterService) {
@@ -58,11 +58,13 @@
 
         $onInit() {
             if (!this.event) throw 'Event required for dataSource component';
-            this.emitter = this.ActionEmitterService.initialize(this.event);
+            this.ActionEmitterService.initialize(this.event);
         }
 
         triggerAction() {
-            this.emitter.doAction(`Something happened! ${++this.count} - ${this.event}`);
+            // Different ways to trigger action
+            this.ActionEmitterService.notifySubscribers(this.event, `Something happened! ${++this.count} - ${this.event}`);
+            // this.emitter.doAction(`Something happened! ${++this.count} - ${this.event}`);
         }
     }
     appModule.component('consumerDataSource', {

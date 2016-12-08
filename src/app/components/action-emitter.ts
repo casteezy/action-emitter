@@ -14,7 +14,7 @@
             this.listeners = [];
         }
 
-        private doAction(data: any) {
+        public doAction(data: any) {
             debugLog('emitter.doAction for', this.listeners.length, 'listeners with data:', data);
             this.listeners.forEach((listener) => listener(data));
         }
@@ -80,6 +80,11 @@
             }
         };
 
+        public notifySubscribers(event:string, data:any) {
+            if (this.emitters[event]) {
+                this.emitters[event].doAction(data);
+            }
+        }
     }
 
     aeModule.service('ActionEmitterService', ActionEmitterService);
