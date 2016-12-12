@@ -16,4 +16,21 @@
             });
     }]);
 
+    class NavbarComponent {
+        static $inject = ['$location'];
+        constructor(public $location) {
+        }
+    }
+    appModule.component('navbar', {
+        template: [
+            '<ul class="nav nav-tabs">',
+            '<li ng-class="{ \'active\' : $ctrl.$location.url() === \'/\'}">',
+            '<a href="#/">Action Emitter</a></li>',
+            '<li ng-class="{ \'active\' : $ctrl.$location.url() === \'/two\'}">',
+            '<a href="#/two">Angular Events</a></li>',
+            '</ul>',
+        ].join(''),
+        controller: NavbarComponent
+    });
+
 })((<any>window).angular);

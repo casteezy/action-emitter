@@ -14,11 +14,11 @@
     <link rel="stylesheet" href="app/lib/font-awesome/css/font-awesome.min.css">
 
 </head>
-<body ng-app="app" class="container">
-
-<ng-view></ng-view>
-
-<!--<div class="" ng-include="'app/playground.html'"></div>-->
+<body ng-app="app">
+<div class="container">
+    <navbar></navbar>
+    <ng-view></ng-view>
+</div>
 
 <script type="application/javascript" src="app/dist/js/app.js"></script>
 <script type="application/javascript" src="app/dist/js/components/action-emitter.js"></script>

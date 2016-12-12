@@ -1,1 +1,36 @@
-<h1>hello from vanilla</h1>
+<div class="vanilla-container" ng-controller="VanillaCtrl as v">
+    <h1>Broadcast actions with angular $rootScope</h1>
+    <p>Instead of using <code>ActionEmitter</code>, use angular's built-in <code>$broadcast</code></p>
+
+    <h2>Sibling components</h2>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <vproducer event="{{v.event}}"></vproducer>
+        </div>
+        <div class="col-lg-6">
+            <vconsumer event="{{v.event}}"></vconsumer>
+            <vconsumer event="{{v.event}}"></vconsumer>
+
+
+            <h3>Consumer initialized later <small class="text-danger">[broken sometimes]</small></h3>
+            <p class="text-danger">Broken on initialization only, when consumer added after action triggered. Catches up
+                on subsequent actions.</p>
+            <button class="btn btn-default btn-sm"
+                    ng-click="v.showTimedConsumer = !v.showTimedConsumer">Add/Delete Consumer
+            </button>
+
+            <!-- ngIf to create/remove for initialization -->
+            <div ng-if="v.showTimedConsumer">
+                <vconsumer event="{{v.event}}"></vconsumer>
+            </div>
+        </div>
+    </div>
+
+<h2>Child to parent <small class="text-danger">[broken]</small></h2>
+<vparent-consumer event="someOtherEvent"></vparent-consumer>
+
+<h2>Parent to child</h2>
+<parent-producer event="someOtherEvent2"></parent-producer>
+
+</div>

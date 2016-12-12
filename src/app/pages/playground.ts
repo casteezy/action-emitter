@@ -51,7 +51,7 @@
         }
 
         $onInit() {
-            if (!this.event) throw 'Event required for dataSource component';
+            if (!this.event) throw 'Event required for producer component';
             this.ActionEmitterService.initialize(this.event);
         }
 
