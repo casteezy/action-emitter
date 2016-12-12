@@ -5,6 +5,18 @@
   margin-top: 15px;
 }
 
+.consumer-list-item {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+.consumer-list-item--consumer {
+  width: 100%;
+}
+
 .bordered {
   border: 1px solid gray;
   padding: 10px;

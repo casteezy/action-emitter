@@ -33,4 +33,15 @@
         controller: NavbarComponent
     });
 
+
+    appModule.controller('PageCtrl', class PageCtrl {
+        public event;
+        public consumerList;
+
+        constructor() {
+            this.event = 'objectClickedEvent';
+            this.consumerList = [];
+        }
+    });
+
 })((<any>window).angular);

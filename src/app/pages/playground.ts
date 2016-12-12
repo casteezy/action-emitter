@@ -4,14 +4,6 @@
 
     const pgModule = angular.module('playground', ['actionEmitter']);
 
-    pgModule.controller('PlaygroundCtrl', class PlaygroundCtrl {
-        public event;
-
-        constructor() {
-            this.event = 'objectClickedEvent';
-        }
-    });
-
     class ConsumerComponent {
         public initializedTime;
         public dateFormat;

@@ -4,17 +4,6 @@
 
     const vanillaModule = angular.module('vanilla', []);
 
-    vanillaModule.controller('VanillaCtrl', class VanillaCtrl {
-        public event:string;
-        public showTimedConsumer:boolean;
-
-        static $inject = [];
-        constructor() {
-            this.event = 'objectClickedEvent';
-        }
-    });
-
-
     class VanillaConsumerComponent {
         public initializedTime;
         public dateFormat;

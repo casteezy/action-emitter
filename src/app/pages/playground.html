@@ -1,4 +1,4 @@
-<div class="playground-container" ng-controller="PlaygroundCtrl as pc">
+<div class="playground-container" ng-controller="PageCtrl as pc">
     <h1>Broadcast actions with custom ActionEmitter</h1>
     <p>Simple, separate angular service to track data changes in cases where older apps don't have access to
         EventEmitter, redux, etc.</p>
@@ -13,18 +13,26 @@
             <consumer event="{{pc.event}}"></consumer>
             <consumer event="{{pc.event}}"></consumer>
 
-
-            <h3>Consumer initialized later</h3>
-            <button class="btn btn-default btn-sm"
-                    ng-click="pc.showTimedConsumer = !pc.showTimedConsumer">Add/Delete Consumer
-            </button>
-
-            <!-- ngIf to create/remove for initialization -->
-            <div ng-if="pc.showTimedConsumer">
-                <consumer event="{{pc.event}}"></consumer>
+            <h3>Consumer initialized later
+                <button class="btn btn-default btn-sm pull-right"
+                        ng-click="pc.consumerList.push(pc.consumerList.length)">Add Consumer
+                </button>
+            </h3>
+            <div class="consumer-list">
+                <div class="consumer-list-item" ng-repeat="addedConsumer in pc.consumerList track by $index">
+                    <button class="btn btn-default btn-sm"
+                            ng-click="pc.consumerList.splice($index, 1)">Delete
+                    </button>
+                    <div class="consumer-list-item--consumer">
+                        <consumer event="{{pc.event}}">
+                    </div>
+                </div>
             </div>
         </div>
+
+
     </div>
+</div>
 
 </div>
 
