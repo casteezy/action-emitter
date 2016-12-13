@@ -1,0 +1,95 @@
+<div class="demo-container" ng-controller="PageCtrl as pc">
+    <h1>Component Communication with ActionEmitter vs $broadcast</h1>
+    <p><code>ActionEmitter</code>: Simple, custom angular service to track data changes in cases where older apps don't
+        have
+        access to EventEmitter, redux, etc.</p>
+    <p><code>$broadcast</code>: Angular way to notify event handlers about data via <code>$scope</code> and/or <code>$rootScope
+    </code></p>
+
+    <section>
+        <h2>Sibling components</h2>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <action-emitter-producer event="{{pc.event}}"></action-emitter-producer>
+                <action-emitter-consumer event="{{pc.event}}"></action-emitter-consumer>
+            </div>
+            <div class="col-lg-6">
+                <scope-event-producer event="{{pc.event2}}"></scope-event-producer>
+                <scope-event-consumer event="{{pc.event2}}"></scope-event-consumer>
+            </div>
+        </div>
+        <section>
+            <h3>Consumer initialized later</h3>
+            <div class="row">
+                <div class="consumer-list-container col-lg-6">
+                    <button class="btn btn-primary btn-sm"
+                            ng-click="pc.aeConsumerList.push(pc.aeConsumerList.length)">Add ActionEmitter Consumer
+                    </button>
+                    <button class="btn btn-default btn-sm"
+                            ng-click="pc.aeConsumerList = []">Reset Consumers
+                    </button>
+
+                    <div class="consumer-list">
+                        <div class="consumer-list-item" ng-repeat="i in pc.aeConsumerList track by $index">
+                            <div class="consumer-list-item--consumer">
+                                <action-emitter-consumer event="{{pc.event}}"></action-emitter-consumer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="consumer-list-container col-lg-6">
+                    <button class="btn btn-primary btn-sm"
+                            ng-click="pc.scopeConsumerList.push(pc.scopeConsumerList.length)">Add Scope Consumer
+                    </button>
+                    <button class="btn btn-default btn-sm"
+                            ng-click="pc.scopeConsumerList = []">Reset Consumers
+                    </button>
+
+                    <div class="consumer-list">
+                        <div class="consumer-list-item" ng-repeat="j in pc.scopeConsumerList track by $index">
+                            <div class="consumer-list-item--consumer">
+                                <scope-event-consumer event="{{pc.event2}}"></scope-event-consumer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+    <div>
+    </div>
+
+    <section>
+        <h2>Child to parent (transclusion)</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <action-emitter-consumer event="CHILD_CREATED_EVENT">
+                    <action-emitter-producer event="CHILD_CREATED_EVENT"></action-emitter-producer>
+                </action-emitter-consumer>
+            </div>
+            <div class="col-lg-6">
+                <scope-event-consumer event="CHILD_CREATED_EVENT2">
+                    <scope-event-producer event="CHILD_CREATED_EVENT2"></scope-event-producer>
+                </scope-event-consumer>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Parent to child (transclusion)</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <action-emitter-producer event="PARENT_CREATED_EVENT">
+                    <action-emitter-consumer event="PARENT_CREATED_EVENT"></action-emitter-consumer>
+                </action-emitter-producer>
+            </div>
+            <div class="col-lg-6">
+                <scope-event-producer event="PARENT_CREATED_EVENT2">
+                    <scope-event-consumer event="PARENT_CREATED_EVENT2"></scope-event-consumer>
+                </scope-event-producer>
+            </div>
+        </div>
+    </section>
+
+</div>

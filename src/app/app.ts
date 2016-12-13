@@ -4,12 +4,17 @@
 
 (function (angular) {
 
-    const appModule = angular.module('app', ['ngRoute', 'playground', 'vanilla']);
+    const appModule = angular.module('app', [
+        'ngRoute',
+        'app.producers',
+        'app.consumers',
+    ]);
 
     appModule.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'app/pages/playground.html'
+                // templateUrl: 'app/pages/playground.html'
+                templateUrl: 'app/pages/demo.html'
             })
             .when('/two', {
                 templateUrl: 'app/pages/vanilla.html'
@@ -33,15 +38,13 @@
         controller: NavbarComponent
     });
 
-
     appModule.controller('PageCtrl', class PageCtrl {
-        public event;
-        public consumerList;
+        public event = 'EVENT_1';
+        public event2 = 'EVENT_2';
+        public scopeConsumerList = [];
+        public aeConsumerList = [];
 
-        constructor() {
-            this.event = 'objectClickedEvent';
-            this.consumerList = [];
-        }
+        constructor() { }
     });
 
 })((<any>window).angular);
