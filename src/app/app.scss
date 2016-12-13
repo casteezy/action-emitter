@@ -4,6 +4,19 @@
 .nav {
   margin-top: 15px;
 }
+.flex-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+}
+
+.consumer,
+.producer {
+  margin: 5px;
+}
 
 .consumer-list-item {
   display: -webkit-flex;

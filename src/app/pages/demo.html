@@ -1,0 +1,48 @@
+<div class="demo-container" ng-controller="PageCtrl as pc">
+    <h1>Component Communication with ActionEmitter vs $broadcast</h1>
+    <p><code>ActionEmitter</code>: Simple, custom angular service to track data changes in cases where older apps don't
+        have
+        access to EventEmitter, redux, etc.</p>
+    <p><code>$broadcast</code>: Angular way to notify event handlers about data via <code>$scope</code> and/or <code>$rootScope
+    </code></p>
+
+    <h2>Sibling components</h2>
+
+    <div class="flex-container">
+        <div class="flex-container">
+            <action-emitter-producer event="{{pc.event}}"></action-emitter-producer>
+            <action-emitter-consumer event="{{pc.event}}"></action-emitter-consumer>
+        </div>
+        <div class="flex-container">
+            <scope-event-producer event="{{pc.event}}"></scope-event-producer>
+            <scope-event-consumer event="{{pc.event}}"></scope-event-consumer>
+        </div>
+    </div>
+
+    <!--<h3>Consumer initialized later
+        <button class="btn btn-primary btn-sm pull-right"
+                ng-click="pc.consumerList.push(pc.consumerList.length)">Add Consumer
+        </button>
+    </h3>
+    <div class="consumer-list">
+        <div class="consumer-list-item" ng-repeat="addedConsumer in pc.consumerList track by $index">
+            <button class="btn btn-default btn-sm"
+                    ng-click="pc.consumerList.splice($index, 1)">Delete
+            </button>
+            <div class="consumer-list-item&#45;&#45;consumer">
+                <consumer event="{{pc.event}}">
+            </div>
+        </div>
+    </div>-->
+
+    <!--<h2>Child to parent</h2>
+    <consumer event="someOtherEvent">
+        <producer event="someOtherEvent"></producer>
+    </consumer>
+
+    <h2>Parent to child</h2>
+    <producer event="someOtherEvent2">
+        <consumer event="someOtherEvent2"></consumer>
+    </producer>-->
+
+</div>

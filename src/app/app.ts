@@ -4,12 +4,17 @@
 
 (function (angular) {
 
-    const appModule = angular.module('app', ['ngRoute', 'playground', 'vanilla']);
+    const appModule = angular.module('app', [
+        'ngRoute',
+        'app.producers',
+        'app.consumers',
+    ]);
 
     appModule.config(['$routeProvider', function ($routeProvider) {
         $routeProvider
             .when('/', {
-                templateUrl: 'app/pages/playground.html'
+                // templateUrl: 'app/pages/playground.html'
+                templateUrl: 'app/pages/demo.html'
             })
             .when('/two', {
                 templateUrl: 'app/pages/vanilla.html'
@@ -32,7 +37,6 @@
         ].join(''),
         controller: NavbarComponent
     });
-
 
     appModule.controller('PageCtrl', class PageCtrl {
         public event;
