@@ -39,13 +39,12 @@
     });
 
     appModule.controller('PageCtrl', class PageCtrl {
-        public event;
-        public consumerList;
+        public event = 'EVENT_1';
+        public event2 = 'EVENT_2';
+        public scopeConsumerList = [];
+        public aeConsumerList = [];
 
-        constructor() {
-            this.event = 'objectClickedEvent';
-            this.consumerList = [];
-        }
+        constructor() { }
     });
 
 })((<any>window).angular);

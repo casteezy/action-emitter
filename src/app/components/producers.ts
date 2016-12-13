@@ -12,30 +12,30 @@ import IController = angular.IController;
         title: string;
     }
 
-    const producerComponentOptions = (componentCtrl:string) => {
+    const producerComponentOptions = ({controller, title}) => {
         return {
+            controller,
             transclude: true,
             bindings: {
                 event: '@'
             },
             template: [
                 '<div class="producer panel panel-info">',
-                '<div class="panel-heading">{{::$ctrl.title}}</div>',
+                `<div class="panel-heading">${title || 'Producer'}</div>`,
                 '<div class="panel-body">',
-                '<p><code>producer</code> component, emitting to <code ng-bind="::$ctrl.event"></code></p>',
-                '<p>Initialized at <code ng-bind="::$ctrl.initializedTime"></code></p>',
+                '<p>emitting to <code ng-bind="::$ctrl.event"></code>, ',
+                'initialized at <code ng-bind="::$ctrl.initializedTime"></code></p>',
                 '<form>',
                 '<div class="form-group">',
                 '<label for="message">Message</label>',
                 '<input id="message" type="text" ng-model="$ctrl.message" class="form-control">',
                 '</div>',
-                '<button type="submit" class="btn btn-primary btn-sm" ng-click="$ctrl.triggerAction()">Click Me</button>',
+                '<button type="submit" class="btn btn-primary" ng-click="$ctrl.triggerAction()">Submit</button>',
                 '</form>',
+                '</div>',
                 '<ng-transclude></ng-transclude>',
                 '</div>',
-                '</div>',
             ].join(''),
-            controller: componentCtrl
         };
     };
 
@@ -94,9 +94,17 @@ import IController = angular.IController;
 
 
     module.controller('ActionEmitterProducerComponent', ActionEmitterProducerComponent);
-    module.component('actionEmitterProducer', producerComponentOptions('ActionEmitterProducerComponent'));
+
+    module.component('actionEmitterProducer', producerComponentOptions({
+        controller: 'ActionEmitterProducerComponent',
+        title: 'Producer via ActionEmitter'
+    }));
 
     module.controller('ScopeEventProducerComponent', ScopeEventProducerComponent);
-    module.component('scopeEventProducer', producerComponentOptions('ScopeEventProducerComponent'));
+
+    module.component('scopeEventProducer', producerComponentOptions({
+        controller: 'ScopeEventProducerComponent',
+        title: 'Producer via ActionEmitter'
+    }));
 
 })((<any>window).angular);

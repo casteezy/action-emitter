@@ -1,5 +1,5 @@
 import IComponentOptions = angular.IComponentOptions;
-(function(angular) {
+(function (angular) {
 
     const module = angular.module('app.consumers', ['actionEmitter']);
 
@@ -9,27 +9,26 @@ import IComponentOptions = angular.IComponentOptions;
         initializedTime: string;
         event: string;
         data: any;
-        title: string;
     }
 
-    const consumerComponentOptions = (componentCtrl:string):IComponentOptions => {
+    const consumerComponentOptions = ({controller, title}): IComponentOptions => {
         return {
+            controller,
             transclude: true,
             bindings: {
                 event: '@'
             },
             template: [
                 '<div class="consumer panel panel-success">',
-                '<div class="panel-heading">{{::$ctrl.title}}</div>',
+                `<div class="panel-heading">${title || 'Consumer'}</div>`,
                 '<div class="panel-body">',
-                '<p><code>consumer</code> component subscribed to <code ng-bind="::$ctrl.event"></code></p>',
-                '<p>Initialized at <code ng-bind="::$ctrl.initializedTime"></code></p>',
+                '<p>subscribed to <code ng-bind="::$ctrl.event"></code>, ',
+                'initialized at <code ng-bind="::$ctrl.initializedTime"></code></p>',
                 '<pre>{{$ctrl.data | json}}</pre>',
                 '<ng-transclude></ng-transclude>',
                 '</div>',
                 '</div>',
             ].join(''),
-            controller: componentCtrl
         };
     };
 
@@ -59,7 +58,6 @@ import IComponentOptions = angular.IComponentOptions;
         public initializedTime;
         public event;
         public data;
-        public title = 'Consumer via $scope';
 
         static $inject = ['$scope', '$filter'];
 
@@ -78,9 +76,17 @@ import IComponentOptions = angular.IComponentOptions;
     }
 
     module.controller('ActionEmitterConsumerComponent', ActionEmitterConsumerComponent);
-    module.component('actionEmitterConsumer', consumerComponentOptions('ActionEmitterConsumerComponent'));
+
+    module.component('actionEmitterConsumer', consumerComponentOptions({
+        controller: 'ActionEmitterConsumerComponent',
+        title: 'Consumer via ActionEmitter'
+    }));
 
     module.controller('ScopeEventConsumerComponent', ScopeEventConsumerComponent);
-    module.component('scopeEventConsumer', consumerComponentOptions('ScopeEventConsumerComponent'));
+
+    module.component('scopeEventConsumer', consumerComponentOptions({
+        controller: 'ScopeEventConsumerComponent',
+        title: 'Consumer via $scope'
+    }));
 
 })((<any>window).angular);

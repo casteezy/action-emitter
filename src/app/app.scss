@@ -1,9 +1,7 @@
-.playground-container {
-}
-
 .nav {
   margin-top: 15px;
 }
+
 .flex-container {
   display: -webkit-flex;
   display: flex;
@@ -18,35 +16,18 @@
   margin: 5px;
 }
 
-.consumer-list-item {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: flex-start;
-  align-items: flex-start;
+.consumer-list-container {
+  width: 50%;
 }
+
+.consumer-list {
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.consumer-list-item {
+}
+
 .consumer-list-item--consumer {
   width: 100%;
-}
-
-.bordered {
-  border: 1px solid gray;
-  padding: 10px;
-  margin: 3px;
-}
-
-.red {
-  color: darkred;
-  border-color: red;
-}
-
-.green {
-  color: darkgreen;
-  border-color: green;
-}
-
-.blue {
-  color: blue;
-  border-color: blue;
 }
