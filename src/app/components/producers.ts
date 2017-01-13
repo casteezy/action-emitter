@@ -39,6 +39,9 @@ import IController = angular.IController;
         };
     };
 
+    interface IFooPayloadDataType {
+
+    }
 
     class ActionEmitterProducerComponent implements IProducerComponent, IController {
         public initializedTime;
@@ -55,14 +58,17 @@ import IController = angular.IController;
 
         $onInit() {
             if (!this.event) throw 'Event required for producer component';
-            this.ActionEmitterService.initialize(this.event);
+            this.ActionEmitterService.initialize(this.event, 'IFooPayloadDataType');
         }
 
         triggerAction() {
             // Different ways to trigger action
-            this.ActionEmitterService.notifySubscribers(this.event, {
-                message: this.message,
-                submittedTime: this.$filter('date')(Date.now(), DATE_FORMAT)
+            this.ActionEmitterService.notifySubscribersTyped(this.event, {
+                data: {
+                    message: this.message,
+                    submittedTime: this.$filter('date')(Date.now(), DATE_FORMAT)
+                },
+                 dataType: 'IFooPayloadDataType'
             });
         }
     }
